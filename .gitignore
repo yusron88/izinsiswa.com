@@ -1,0 +1,6 @@
+# Abaikan file konfigurasi database lokal jika berisi password sensitif
+# config.php 
+
+# Abaikan file sistem operasi
+.DS_Store
+Thumbs.db
