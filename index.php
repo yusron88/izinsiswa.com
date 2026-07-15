@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url("https://res.cloudinary.com/dptukmwku/image/upload/v1782835508/Desain_tanpa_judul_5_1_1_srjihe.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #1e2a3a 0%, #0f1724 100%);
+            color: #fff;
+            padding: 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-brand {
+            padding: 24px 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+        .sidebar-logo {
+            max-height: 80px; 
+            width: auto;      
+            display: inline-block;
+            margin-bottom: 12px; 
+        }
+        .sidebar-brand h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        .sidebar-brand small {
+            display: block;
+            color: #8a9bb5;
+            font-size: 0.7rem;
+            margin-top: 2px;
+            letter-spacing: 1px;
+        }
+        .sidebar .nav {
+            padding: 12px 10px;
+        }
+        .sidebar .nav-item {
+            margin-bottom: 2px;
+        }
+        .sidebar .nav-link {
+            color: #b0c4de;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: linear-gradient(135deg, #4a7cf7, #6c5ce7);
+            box-shadow: 0 4px 15px rgba(74, 124, 247, 0.35);
+        }
+        .sidebar .nav-link .icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto;
+        }
+        .sidebar-footer .btn-outline-light {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 8px;
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #b0c4de;
+        }
+        .sidebar-footer .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .main-content {
+            padding: 28px 32px;
+            background: transparent; 
+            min-height: 100vh;
+        }
+        .page {
+            animation: fadeUp 0.35s ease;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            height: 100%;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+        }
+        .stat-card .card-body { padding: 20px 24px; }
+        .stat-card .stat-icon { font-size: 2rem; opacity: 0.7; }
+        .stat-card .stat-number { font-size: 2.2rem; font-weight: 700; line-height: 1.2; }
+        .stat-card .stat-label { color: #6c7a8a; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .stat-card.bg-primary-light { background: linear-gradient(135deg, #e8edff, #d6e0ff); color: #2d4b9e; }
+        .stat-card.bg-danger-light { background: linear-gradient(135deg, #ffe8ec, #ffd6dc); color: #b33c4a; }
+        .stat-card.bg-success-light { background: linear-gradient(135deg, #e3f5ec, #c8eedd); color: #1f7b4a; }
+        .stat-card.bg-warning-light { background: linear-gradient(135deg, #fff4e0, #ffecce); color: #a8691a; }
+
+        .form-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+        }
+        .form-section h5 { font-weight: 600; color: #1e2a3a; margin-bottom: 16px; }
+        .form-control, .form-select {
+            border-radius: 10px; border: 1.5px solid #e2e8f0; padding: 10px 14px; font-size: 0.9rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus { border-color: #4a7cf7; box-shadow: 0 0 0 3px rgba(74, 124, 247, 0.15); }
+        .form-label { font-weight: 600; font-size: 0.85rem; color: #2d3a4a; margin-bottom: 4px; }
+        .btn-primary { background: linear-gradient(135deg, #4a7cf7, #6c5ce7); border: none; border-radius: 10px; padding: 10px 28px; font-weight: 600; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74, 124, 247, 0.35); }
+        .btn-primary:disabled { opacity: 0.7; transform: none; }
+        .btn-secondary { border-radius: 10px; padding: 10px 28px; font-weight: 600; }
+        .btn-sm { border-radius: 8px; padding: 4px 12px; font-size: 0.75rem; }
+
+        .table-wrap { background: #fff; border-radius: 16px; padding: 0; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); overflow: hidden; }
+        .table-wrap .table { margin: 0; font-size: 0.88rem; }
+        .table-wrap .table thead th { background: #f8faff; border-bottom: 2px solid #e2e8f0; color: #1e2a3a; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3px; padding: 12px 16px; white-space: nowrap; }
+        .table-wrap .table tbody td { padding: 10px 16px; vertical-align: middle; border-bottom: 1px solid #f0f2f5; }
+        .table-wrap .table tbody tr:hover { background: #f8faff; }
+        .table-wrap .table tbody tr:last-child td { border-bottom: none; }
+
+        .chart-box { background: #fff; border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); height: 100%; }
+        .chart-box h6 { font-weight: 600; color: #1e2a3a; margin-bottom: 16px; }
+
+        @media (max-width: 768px) {
+            .sidebar { min-height: auto; height: auto; position: relative; }
+            .main-content { padding: 16px; }
+            .stat-card .stat-number { font-size: 1.6rem; }
+            .form-section { padding: 16px; }
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="sidebar-brand">
+                    <img src="https://res.cloudinary.com/dptukmwku/image/upload/v1779207266/Desain_tanpa_judul_hukrxe.svg" alt="Logo SMAN Jatirogo" class="sidebar-logo">
+                    <h4>SMA NEGERI JATIROGO</h4>
+                    <small>IZIN SISWA TERINTEGRASI</small>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-page="home">
+                            <span class="icon">📊</span> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-page="izinsiswa">
+                            <span class="icon">📝</span> IzinSiswa
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-page="izinpulang">
+                            <span class="icon">🚶</span> IzinMeninggalkanKelas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-page="gurupiket">
+                            <span class="icon">🧑‍🏫</span> GuruPiket
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-footer">
+                    <button class="btn btn-outline-light w-100 btn-sm mb-1" onclick="printRecap('izinSiswa')">
+                        🖨️ Cetak Rekap Izin Siswa
+                    </button>
+                    <button class="btn btn-outline-light w-100 btn-sm" onclick="printRecap('izinMeninggalkanKelas')">
+                        🖨️ Cetak Rekap Izin Meninggalkan Kelas
+                    </button>
+                </div>
+            </nav>
+
+            <main class="col-md-10 main-content">
+
+                <div id="page-home" class="page">
+                    <h2 class="mb-3 fw-bold" 
+                    style="color: #1e2a3a;text-shadow:0 1px 0 #c9c9c9,0 2px 0 #b9b9b9,0 3px 0 #a9a9a9,0 4px 0 #999999,0 5px 3px rgba(0,0,0,0.2);">📊 Dashboard</h2>
+                    <p class="mb-4" style="font-size:0.95rem; color:#FFFF00;text-decoration: underline;">Rekapitulasi izin siswa hari ini dan bulan ini</p>
+
+                    <div class="row g-3 mb-4" id="stats-row">
+                        <div class="col-md-3 col-6">
+                            <div class="card stat-card bg-primary-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="stat-label">Hari Ini · Izin Siswa</div>
+                                            <div class="stat-number" id="stat-today-terlambat">0</div>
+                                        </div>
+                                        <span class="stat-icon">📌</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="card stat-card bg-danger-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="stat-label">Hari Ini · Izin Meninggalkan Kelas</div>
+                                            <div class="stat-number" id="stat-today-pulang">0</div>
+                                        </div>
+                                        <span class="stat-icon">🚪</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="card stat-card bg-success-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="stat-label">Bulan Ini · Izin Siswa</div>
+                                            <div class="stat-number" id="stat-month-terlambat">0</div>
+                                        </div>
+                                        <span class="stat-icon">📅</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="card stat-card bg-warning-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="stat-label">Bulan Ini · Izin Meninggalkan Kelas</div>
+                                            <div class="stat-number" id="stat-month-pulang">0</div>
+                                        </div>
+                                        <span class="stat-icon">📆</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-lg-8">
+                            <div class="chart-box">
+                                <h6>📈 Rekap Bulanan (per hari)</h6>
+                                <canvas id="monthlyChart" height="220"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="chart-box">
+                                <h6>🧩 Perbandingan Bulan Ini</h6>
+                                <canvas id="pieChart" height="220"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="page-izinsiswa" class="page d-none">
+                    <h2 class="mb-3 fw-bold" style="color:#1e2a3a;">📝 IzinSiswa (Terlambat)</h2>
+
+                    <div class="form-section">
+                        <h5>✏️ Tambah / Edit Data</h5>
+                        <form id="form-izinsiswa">
+                            <input type="hidden" id="is-edit-id" value="">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control" id="is-tgl" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Nama Siswa</label>
+                                    <select class="form-select" id="is-nama" required>
+                                        <option value="">Pilih...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="is-kelas" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Guru Piket</label>
+                                    <select class="form-select" id="is-guru" required>
+                                        <option value="">Pilih...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-4">
+                                    <label class="form-label">Keterangan</label>
+                                    <select class="form-select" id="is-keterangan" required>
+                                        <option value="">Pilih...</option>
+                                        <option value="Izin">Izin</option>
+                                        <option value="Sakit">Sakit</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary" id="btn-submit-is">Simpan Data</button>
+                                    <button type="button" class="btn btn-secondary" id="btn-cancel-is" style="display:none;">Batal</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table class="table" id="table-izinsiswa">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th><th>Nama</th><th>Kelas</th><th>Keterangan</th><th>Guru Piket</th><th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="page-izinpulang" class="page d-none">
+                    <h2 class="mb-3 fw-bold" style="color:#1e2a3a;">🚶 IzinMeninggalkanKelas (Pulang)</h2>
+
+                    <div class="form-section">
+                        <h5>✏️ Tambah / Edit Data</h5>
+                        <form id="form-izinpulang">
+                            <input type="hidden" id="ip-edit-id" value="">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control" id="ip-tgl" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Nama Siswa</label>
+                                    <select class="form-select" id="ip-nama" required>
+                                        <option value="">Pilih...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="ip-kelas" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Guru Piket</label>
+                                    <select class="form-select" id="ip-guru" required>
+                                        <option value="">Pilih...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-2">
+                                    <label class="form-label">Jam Keluar</label>
+                                    <input type="time" class="form-control" id="ip-jam" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Jam Kembali</label>
+                                    <input type="time" class="form-control" id="ip-jamkembali">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Keterangan</label>
+                                    <textarea class="form-control" id="ip-keterangan" rows="1" placeholder="Alasan pulang..."></textarea>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary" id="btn-submit-ip">Simpan Data</button>
+                                    <button type="button" class="btn btn-secondary" id="btn-cancel-ip" style="display:none;">Batal</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table class="table" id="table-izinpulang">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th><th>Nama</th><th>Kelas</th><th>Keterangan</th><th>Jam Keluar</th><th>Jam Kembali</th><th>Guru Piket</th><th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="page-gurupiket" class="page d-none">
+                    <h2 class="mb-3 fw-bold" style="color:#1e2a3a;">🧑‍🏫 Jadwal Guru Piket</h2>
+                    <div class="table-wrap mt-4">
+                        <table class="table" id="table-gurupiket">
+                            <thead>
+                                <tr>
+                                    <th>Hari</th>
+                                    <th>Guru Piket</th>
+                                    <th>Petugas Absen</th>
+                                    <th>Guru BK</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // GLOBAL STATE
+        // ============================================================
+        var students = [];
+        var guruList = [];
+        var monthlyChartInstance = null;
+        var pieChartInstance = null;
+        var editingType = null;
+        var API_BASE = 'api.php';
+
+        // ============================================================
+        // FUNGSI API HELPER
+        // ============================================================
+        async function callAPI(action, method = 'GET', data = null, params = {}) {
+            let url = `${API_BASE}?action=${action}`;
+            for (let key in params) {
+                url += `&${key}=${encodeURIComponent(params[key])}`;
+            }
+            let options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            };
+            if (data && (method === 'POST' || method === 'PUT')) {
+                options.body = JSON.stringify(data);
+            }
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || `HTTP ${response.status}`);
+                }
+                return result;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // ============================================================
+        // NAVIGASI
+        // ============================================================
+        document.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-link').forEach(function(n) { n.classList.remove('active'); });
+                this.classList.add('active');
+
+                var pageId = this.getAttribute('data-page');
+                document.querySelectorAll('.page').forEach(function(p) { p.classList.add('d-none'); });
+                var target = document.getElementById('page-' + pageId);
+                if (target) target.classList.remove('d-none');
+
+                if (pageId === 'home') loadDashboard();
+                else if (pageId === 'izinsiswa') loadIzinSiswaTable();
+                else if (pageId === 'izinpulang') loadIzinPulangTable();
+                else if (pageId === 'gurupiket') loadGuruPiketTable();
+            });
+        });
+
+        // ============================================================
+        // LOAD INITIAL DATA
+        // ============================================================
+        async function loadInitialData() {
+            try {
+                const studentData = await callAPI('getStudents');
+                students = studentData;
+                populateStudentSelects(studentData);
+                const guruData = await callAPI('getGuruPiketList');
+                guruList = guruData;
+                populateGuruSelects(guruData);
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('is-tgl').value = today;
+                document.getElementById('ip-tgl').value = today;
+            } catch (error) {
+                console.error('Gagal load data awal:', error);
+                alert('Gagal memuat data: ' + error.message);
+            }
+        }
+
+        function populateStudentSelects(data) {
+            ['is-nama', 'ip-nama'].forEach(function(id) {
+                var sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">Pilih Siswa...</option>';
+                data.forEach(function(s) {
+                    var opt = document.createElement('option');
+                    opt.value = s.nama;
+                    opt.textContent = s.nama;
+                    sel.appendChild(opt);
+                });
+            });
+        }
+
+        function populateGuruSelects(data) {
+            ['is-guru', 'ip-guru'].forEach(function(id) {
+                var sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">Pilih Guru...</option>';
+                data.forEach(function(g) {
+                    var opt = document.createElement('option');
+                    opt.value = g;
+                    opt.textContent = g;
+                    sel.appendChild(opt);
+                });
+            });
+        }
+
+        function setupAutoFill() {
+            document.getElementById('is-nama').addEventListener('change', function() {
+                var s = students.find(function(x) { return x.nama === this.value; }.bind(this));
+                document.getElementById('is-kelas').value = s ? s.kelas : '';
+            });
+            document.getElementById('ip-nama').addEventListener('change', function() {
+                var s = students.find(function(x) { return x.nama === this.value; }.bind(this));
+                document.getElementById('ip-kelas').value = s ? s.kelas : '';
+            });
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        async function loadDashboard() {
+            try {
+                const stats = await callAPI('getDashboardStats');
+                if (!stats) return;
+                document.getElementById('stat-today-terlambat').innerText = stats.todayTerlambat || 0;
+                document.getElementById('stat-today-pulang').innerText = stats.todayPulang || 0;
+                document.getElementById('stat-month-terlambat').innerText = stats.monthTerlambat || 0;
+                document.getElementById('stat-month-pulang').innerText = stats.monthPulang || 0;
+                renderMonthlyChart(stats.monthlyData || []);
+                renderPieChart(stats.monthTerlambat || 0, stats.monthPulang || 0);
+            } catch (error) {
+                console.error('Gagal load dashboard:', error);
+            }
+        }
+
+        function renderMonthlyChart(data) {
+            var ctx = document.getElementById('monthlyChart').getContext('2d');
+            if (monthlyChartInstance) monthlyChartInstance.destroy();
+
+            var labels = data.map(function(d) { return d.day; });
+            var terlambat = data.map(function(d) { return parseInt(d.terlambat) || 0; });
+            var pulang = data.map(function(d) { return parseInt(d.pulang) || 0; });
+
+            monthlyChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Izin', data: terlambat, backgroundColor: 'rgba(74,124,247,0.7)', borderColor: 'rgba(74,124,247,1)', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Meninggalkan Kelas', data: pulang, backgroundColor: 'rgba(239,68,68,0.7)', borderColor: 'rgba(239,68,68,1)', borderWidth: 1, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: true,
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } } },
+                        x: { ticks: { font: { size: 9 }, maxRotation: 45 } }
+                    }
+                }
+            });
+        }
+
+        function renderPieChart(terlambat, pulang) {
+            var ctx = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Izin', 'Meninggalkan Kelas'],
+                    datasets: [{ data: [terlambat, pulang], backgroundColor: ['rgba(74,124,247,0.8)', 'rgba(239,68,68,0.8)'], borderColor: ['rgba(74,124,247,1)', 'rgba(239,68,68,1)'], borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } } }, cutout: '65%' }
+            });
+        }
+
+        // ============================================================
+        // GURU PIKET TABLE
+        // ============================================================
+        async function loadGuruPiketTable() {
+            var tbody = document.querySelector('#table-gurupiket tbody');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Memuat data...</td></tr>';
+            try {
+                const data = await callAPI('getJadwalGuruPiket');
+                tbody.innerHTML = '';
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Tidak ada data jadwal</td></tr>';
+                    return;
+                }
+                data.forEach(function(row) {
+                    var tr = document.createElement('tr');
+                    tr.innerHTML = '<td>' + (row.hari || '-') + '</td>' +
+                                   '<td>' + (row.guru_piket || '-') + '</td>' +
+                                   '<td>' + (row.petugas_absen || '-') + '</td>' +
+                                   '<td>' + (row.guru_bk || '-') + '</td>';
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal memuat data</td></tr>';
+                console.error(error);
+            }
+        }
+
+        // ============================================================
+        // FORM SUBMIT (IzinSiswa)
+        // ============================================================
+        document.getElementById('form-izinsiswa').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('btn-submit-is');
+            var editId = document.getElementById('is-edit-id').value;
+
+            var data = {
+                Tanggal: document.getElementById('is-tgl').value,
+                Nama: document.getElementById('is-nama').value,
+                Kelas: document.getElementById('is-kelas').value,
+                Keterangan: document.getElementById('is-keterangan').value,
+                GuruPiket: document.getElementById('is-guru').value
+            };
+
+            if (!data.Nama || !data.Keterangan || !data.GuruPiket) { 
+                alert('Harap lengkapi semua field!'); 
+                return; 
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = editId ? 'Mengupdate...' : 'Menyimpan...';
+
+            try {
+                let result;
+                if (editId) {
+                    result = await callAPI('updateIzin', 'POST', {
+                        type: 'izinSiswa',
+                        rowId: parseInt(editId),
+                        data: data
+                    });
+                } else {
+                    result = await callAPI('saveIzin', 'POST', {
+                        type: 'izinSiswa',
+                        data: data
+                    });
+                }
+                alert(editId ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
+                resetForm('is');
+                loadIzinSiswaTable();
+                loadDashboard();
+            } catch (error) {
+                alert('Gagal: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = editId ? 'Update' : 'Simpan Data';
+            }
+        });
+
+        document.getElementById('btn-cancel-is').addEventListener('click', function() { resetForm('is'); });
+
+        // ============================================================
+        // FORM SUBMIT (IzinMeninggalkanKelas)
+        // ============================================================
+        document.getElementById('form-izinpulang').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('btn-submit-ip');
+            var editId = document.getElementById('ip-edit-id').value;
+
+            var data = {
+                Tanggal: document.getElementById('ip-tgl').value,
+                Nama: document.getElementById('ip-nama').value,
+                Kelas: document.getElementById('ip-kelas').value,
+                Keterangan: document.getElementById('ip-keterangan').value,
+                JamKeluar: document.getElementById('ip-jam').value,
+                JamKembali: document.getElementById('ip-jamkembali').value,
+                GuruPiket: document.getElementById('ip-guru').value
+            };
+
+            if (!data.Nama || !data.JamKeluar || !data.GuruPiket) { 
+                alert('Harap lengkapi semua field!'); 
+                return; 
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = editId ? 'Mengupdate...' : 'Menyimpan...';
+
+            try {
+                let result;
+                if (editId) {
+                    result = await callAPI('updateIzin', 'POST', {
+                        type: 'izinMeninggalkanKelas',
+                        rowId: parseInt(editId),
+                        data: data
+                    });
+                } else {
+                    result = await callAPI('saveIzin', 'POST', {
+                        type: 'izinMeninggalkanKelas',
+                        data: data
+                    });
+                }
+                alert(editId ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
+                resetForm('ip');
+                loadIzinPulangTable();
+                loadDashboard();
+            } catch (error) {
+                alert('Gagal: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = editId ? 'Update' : 'Simpan Data';
+            }
+        });
+
+        document.getElementById('btn-cancel-ip').addEventListener('click', function() { resetForm('ip'); });
+
+        // ============================================================
+        // RESET FORM
+        // ============================================================
+        function resetForm(prefix) {
+            document.getElementById(prefix + '-edit-id').value = '';
+            document.getElementById(prefix + '-tgl').value = '';
+            document.getElementById(prefix + '-nama').value = '';
+            document.getElementById(prefix + '-kelas').value = '';
+            document.getElementById(prefix + '-guru').value = '';
+
+            if (prefix === 'is') {
+                document.getElementById('is-keterangan').value = '';
+                document.getElementById('btn-submit-is').innerHTML = 'Simpan Data';
+                document.getElementById('btn-submit-is').disabled = false;
+                document.getElementById('btn-cancel-is').style.display = 'none';
+            } else {
+                document.getElementById('ip-keterangan').value = '';
+                document.getElementById('ip-jam').value = '';
+                document.getElementById('ip-jamkembali').value = '';
+                document.getElementById('btn-submit-ip').innerHTML = 'Simpan Data';
+                document.getElementById('btn-submit-ip').disabled = false;
+                document.getElementById('btn-cancel-ip').style.display = 'none';
+            }
+            editingType = null;
+        }
+
+        // ============================================================
+        // LOAD TABLES
+        // ============================================================
+        async function loadIzinSiswaTable() {
+            var tbody = document.querySelector('#table-izinsiswa tbody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Memuat...</td></tr>';
+            try {
+                const data = await callAPI('getIzin', 'GET', null, { type: 'izinSiswa' });
+                tbody.innerHTML = '';
+                if (!data || data.length === 0) { 
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Belum ada data</td></tr>'; 
+                    return; 
+                }
+                data.forEach(function(row) {
+                    var tr = document.createElement('tr');
+                    tr.innerHTML = '<td>' + (row.tanggal || '') + '</td>' +
+                                   '<td>' + (row.nama_siswa || '') + '</td>' +
+                                   '<td>' + (row.kelas || '') + '</td>' +
+                                   '<td>' + (row.keterangan || '') + '</td>' +
+                                   '<td>' + (row.guru_piket || '') + '</td>' +
+                                   '<td>' +
+                                       '<button class="btn btn-sm btn-info text-white" onclick="editIzin(\'izinSiswa\', ' + row.id + ')">✏️</button> ' +
+                                       '<button class="btn btn-sm btn-success text-white" onclick="printLetter(\'izinSiswa\', ' + row.id + ')">🖨️</button>' +
+                                   '</td>';
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data</td></tr>';
+                console.error(error);
+            }
+        }
+
+        async function loadIzinPulangTable() {
+            var tbody = document.querySelector('#table-izinpulang tbody');
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center py-3 text-muted">Memuat...</td></tr>';
+            try {
+                const data = await callAPI('getIzin', 'GET', null, { type: 'izinMeninggalkanKelas' });
+                tbody.innerHTML = '';
+                if (!data || data.length === 0) { 
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-3 text-muted">Belum ada data</td></tr>'; 
+                    return; 
+                }
+                data.forEach(function(row) {
+                    var tr = document.createElement('tr');
+                    tr.innerHTML = '<td>' + (row.tanggal || '') + '</td>' +
+                                   '<td>' + (row.nama_siswa || '') + '</td>' +
+                                   '<td>' + (row.kelas || '') + '</td>' +
+                                   '<td>' + (row.keterangan || '-') + '</td>' +
+                                   '<td>' + (row.jam_keluar || '-') + '</td>' +
+                                   '<td>' + (row.jam_kembali || '-') + '</td>' +
+                                   '<td>' + (row.guru_piket || '-') + '</td>' +
+                                   '<td>' +
+                                       '<button class="btn btn-sm btn-info text-white" onclick="editIzin(\'izinMeninggalkanKelas\', ' + row.id + ')">✏️</button> ' +
+                                       '<button class="btn btn-sm btn-success text-white" onclick="printLetter(\'izinMeninggalkanKelas\', ' + row.id + ')">🖨️</button>' +
+                                   '</td>';
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Gagal memuat data</td></tr>';
+                console.error(error);
+            }
+        }
+
+        // ============================================================
+        // EDIT & PRINT
+        // ============================================================
+        async function editIzin(type, rowId) {
+            editingType = type;
+            var prefix = type === 'izinSiswa' ? 'is' : 'ip';
+            try {
+                const data = await callAPI('getIzinRow', 'GET', null, { type: type, id: rowId });
+                if (!data) return;
+                document.getElementById(prefix + '-edit-id').value = rowId;
+                document.getElementById(prefix + '-tgl').value = data.Tanggal || '';
+                document.getElementById(prefix + '-nama').value = data.Nama || '';
+                document.getElementById(prefix + '-kelas').value = data.Kelas || '';
+                document.getElementById(prefix + '-guru').value = data.GuruPiket || '';
+                if (type === 'izinSiswa') {
+                    document.getElementById('is-keterangan').value = data.Keterangan || '';
+                    document.getElementById('btn-submit-is').innerHTML = 'Update';
+                    document.getElementById('btn-cancel-is').style.display = 'block';
+                    document.querySelector('.sidebar .nav-link[data-page="izinsiswa"]').click();
+                } else {
+                    document.getElementById('ip-jam').value = data.JamKeluar || '';
+                    document.getElementById('ip-jamkembali').value = data.JamKembali || '';
+                    document.getElementById('ip-keterangan').value = data.Keterangan || '';
+                    document.getElementById('btn-submit-ip').innerHTML = 'Update';
+                    document.getElementById('btn-cancel-ip').style.display = 'block';
+                    document.querySelector('.sidebar .nav-link[data-page="izinpulang"]').click();
+                }
+            } catch (error) {
+                alert('Gagal mengambil data: ' + error.message);
+            }
+        }
+
+        async function printLetter(type, rowId) {
+            try {
+                const result = await callAPI('getLetterHTML', 'GET', null, { type: type, id: rowId });
+                if (result.error) {
+                    alert('Gagal cetak: ' + result.error);
+                    return;
+                }
+                if (!result.html) {
+                    alert('Gagal cetak: HTML tidak ditemukan.');
+                    return;
+                }
+                var win = window.open('', '_blank');
+                win.document.write(result.html);
+                win.document.close();
+            } catch (error) {
+                alert('Gagal cetak: ' + error.message + '\nPeriksa koneksi atau data.');
+                console.error(error);
+            }
+        }
+
+        async function printRecap(type) {
+            try {
+                const data = await callAPI('getTodayRecap', 'GET', null, { type: type });
+                if (!data || data.length === 0) { 
+                    alert('Tidak ada data hari ini.'); 
+                    return; 
+                }
+
+                function dapatkanHariDanTanggal(tanggalStr) {
+                    if (!tanggalStr) return '';
+                    var namaHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    try {
+                        var objekTanggal = new Date(tanggalStr);
+                        if (!isNaN(objekTanggal)) {
+                            var day = objekTanggal.getDate().toString().padStart(2, '0');
+                            var month = (objekTanggal.getMonth() + 1).toString().padStart(2, '0');
+                            var year = objekTanggal.getFullYear();
+                            return namaHari[objekTanggal.getDay()] + ', ' + day + '/' + month + '/' + year;
+                        }
+                    } catch (e) { console.log(e); }
+                    return tanggalStr;
+                }
+
+                function ambilJam(text) {
+                    var txt = String(text || '');
+                    if (!txt || txt === '-') return '-';
+                    if (txt.includes(' ')) {
+                        var match = txt.match(/\d{2}:\d{2}/);
+                        return match ? match[0] : txt;
+                    }
+                    if (txt.includes(':')) {
+                        var parts = txt.split(':');
+                        return parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
+                    }
+                    return txt;
+                }
+
+                var title = type === 'izinSiswa' ? 'SURAT IZIN SISWA' : 'SURAT IZIN MENINGGALKAN KELAS';
+                
+                var html = '<!DOCTYPE html><html><head><title>Cetak Kupon Izin</title>' +
+                    '<style>' +
+                    '  @page { size: A4 portrait; margin: 10mm; }' +
+                    '  body { font-family: "Times New Roman", Times, serif; color: #000; margin: 0; padding: 0; background: #fff; }' +
+                    '  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; box-sizing: border-box; }' +
+                    '  .kupon-card { border: 1px dashed #666; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-inside: avoid; background: #fff; }' +
+                    '  .kop-surat { display: flex; align-items: center; border-bottom: 2px double #000; padding-bottom: 4px; margin-bottom: 6px; }' +
+                    '  .logo-area { flex: 0 0 45px; text-align: center; }' +
+                    '  .logo-area img { max-width: 38px; height: auto; }' +
+                    '  .kop-header { flex: 1; text-align: center; line-height: 1.1; }' +
+                    '  .kop-header h2 { margin: 0; font-size: 8px; font-weight: normal; }' +
+                    '  .kop-header h3 { margin: 0; font-size: 9px; font-weight: normal; }' +
+                    '  .kop-header h1 { margin: 1px 0; font-size: 11px; font-weight: bold; }' +
+                    '  .kop-header p { margin: 0; font-size: 6.5px; }' +
+                    '  .judul-surat { text-align: center; font-size: 10px; font-weight: bold; text-decoration: underline; margin: 5px 0; text-transform: uppercase; }' +
+                    '  .pembuka { margin: 0 0 4px 0; font-size: 9px; line-height: 1.2; }' +
+                    '  table { width: 100%; border-collapse: collapse; margin: 4px 0; }' +
+                    '  td { padding: 2px 0; vertical-align: top; font-size: 9px; line-height: 1.2; }' +
+                    '  td:first-child { width: 32%; font-weight: bold; }' +
+                    '  .penutup { margin: 4px 0 0 0; font-size: 8.5px; font-style: italic; line-height: 1.2; }' +
+                    '  .footer { margin-top: 8px; display: flex; justify-content: flex-end; }' +
+                    '  .signature { text-align: center; width: 50%; font-size: 8.5px; line-height: 1.1; }' +
+                    '  .signature .space { height: 28px; }' +
+                    '  @media print { .kupon-card { border: 1px dashed #000; } }' +
+                    '</style></head><body>' +
+                    '<div class="grid-container">';
+
+                data.forEach(function(row) {
+                    var nama = row.nama_siswa || '-';
+                    var kelas = row.kelas || '-';
+                    var tglMentah = row.tanggal || '';
+                    var tglDenganHari = dapatkanHariDanTanggal(tglMentah);
+                    var ket = row.keterangan || '-';
+                    var guru = row.guru_piket || '-';
+                    
+                    var extraRow = '';
+                    if (type === 'izinMeninggalkanKelas') {
+                        var jamKeluar = ambilJam(row.jam_keluar);
+                        var jamKembali = ambilJam(row.jam_kembali);
+                        extraRow = '<tr><td>Jam Keluar</td><td>: ' + jamKeluar + ' WIB</td></tr>' +
+                                   '<tr><td>Jam Kembali</td><td>: ' + jamKembali + ' WIB</td></tr>';
+                    }
+
+                    html += '<div class="kupon-card">' +
+                        '  <div class="kop-surat">' +
+                        '    <div class="logo-area">' +
+                        '      <img src="https://res.cloudinary.com/dptukmwku/image/upload/Logo_Provinsi_Jawa_Timur_hgoag1.jpg">' +
+                        '    </div>' +
+                        '    <div class="kop-header">' +
+                        '      <h2>PEMERINTAH PROVINSI JAWA TIMUR</h2>' +
+                        '      <h3>DINAS PENDIDIKAN</h3>' +
+                        '      <h1>SMA NEGERI JATIROGO</h1>' +
+                        '      <p>Jl. Raya Bader No. 20, Tuban, Jawa Timur 62362</p>' +
+                        '      <p>Web: www.smanjatirogo.sch.id | Email: smajatirogo@yahoo.co.id</p>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '  <div class="judul-surat">' + title + '</div>' +
+                        '  <div class="content">' +
+                        '    <p class="pembuka">Guru Piket SMAN Jatirogo memberikan izin kepada:</p>' +
+                        '    <table>' +
+                        '      <tr><td>Nama Siswa</td><td>: ' + nama + '</td></tr>' +
+                        '      <tr><td>Kelas</td><td>: ' + kelas + '</td></tr>' +
+                        '      <tr><td>Hari/Tanggal</td><td>: ' + tglDenganHari + '</td></tr>' +
+                        '      <tr><td>Keterangan</td><td>: ' + ket + '</td></tr>' +
+                        '      ' + extraRow +
+                        '    </table>' +
+                        '    <p class="penutup">Demikian surat izin ini dibuat untuk digunakan sebagaimana mestinya.</p>' +
+                        '  </div>' +
+                        '  <div class="footer">' +
+                        '    <div class="signature">' +
+                        '      <p>Jatirogo, ' + tglMentah + '<br>Guru Piket,</p>' +
+                        '      <div class="space"></div>' +
+                        '      <p><strong>' + guru + '</strong><br>___________________</p>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>';
+                });
+
+                html += '</div>' +
+                    '<script>window.onload=function(){window.print();}<\/script></body></html>';
+                
+                var win = window.open('', '_blank');
+                win.document.write(html);
+                win.document.close();
+            } catch (error) {
+                alert('Gagal cetak rekap: ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // START
+        // ============================================================
+        loadInitialData();
+        setupAutoFill();
+        document.querySelector('.sidebar .nav-link[data-page="home"]').click();
+
+        setInterval(function() {
+            var active = document.querySelector('.sidebar .nav-link.active');
+            if (active && active.getAttribute('data-page') === 'home') {
+                loadDashboard();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
